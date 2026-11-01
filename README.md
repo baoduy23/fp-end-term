@@ -109,7 +109,7 @@ Nhóm Tệp tài khoản ghi tạm vào `saves/` ở thư mục đang chạy r�
 
 Phép đo `foldl` / `foldl'` in ra sau phần test. Khi build bằng cabal (`-O1`), GHC phân tích strictness nên hai cách gần như bằng nhau (`~6 MiB` tổng cấp phát, `44 KB` Heap cực đại); khi biên dịch `-O0` với `5.000.000` phần tử, `foldl` lười tích lũy chuỗi thunk chiếm tới `312 MB` Heap cực đại và mất `1.89 s` (GC `81.9%`), trong khi `foldl'` chặt chỉ chiếm `44 KB` Heap cực đại và mất `0.16 s` (chi tiết tại Mục 4.1, Bảng 3 của `Báo cáo.docx`). Game chủ động dùng `foldl'`, trường strict `!` và `BangPatterns` để không phụ thuộc vào tối ưu hóa của compiler.
 
-## 7. Cấu trúc mã nguồn (16 module + bộ kiểm thử)
+## 7. Cấu trúc mã nguồn (17 module + bộ kiểm thử)
 
 ```text
 src/
@@ -147,9 +147,9 @@ test/Spec.hs            130 test case và phép đo lazy / strict
 
 | Thành viên | Module phụ trách | Nội dung chính |
 | :--- | :--- | :--- |
-| Lê Trần Bảo Duy | `Types.hs`, `Hero.hs`, `GameLogic.hs` | ADT, type class (`Collidable`, `GameEntity`, `HasHero`), hồ sơ 10 tướng, luật game thuần, `par` / `pseq` |
+| Trần Minh Khang | `Types.hs`, `Hero.hs`, `GameLogic.hs` | ADT, type class (`Collidable`, `GameEntity`, `HasHero`), hồ sơ 10 tướng, luật game thuần, `par` / `pseq` |
 | Nguyễn Trung Tín | `ParserCombinator.hs`, `Protocol.hs`, `Server/Network.hs` | Parser combinator tự viết, giao thức đóng khung dòng TCP 9123, phản hồi & chọn phòng LAN UDP 9124 |
-| Trần Minh Khang | `Server/State.hs`, `Server/Tick.hs` | STM (`TVar`, `TChan`), gom lệnh nguyên tử mỗi nhịp, vòng lặp 30 Hz theo mốc thời gian thực |
+| Lê Trần Bảo Duy | `Server/State.hs`, `Server/Tick.hs` | STM (`TVar`, `TChan`), gom lệnh nguyên tử mỗi nhịp, vòng lặp 30 Hz theo mốc thời gian thực |
 | Đặng Anh Quân | `Server/Supervisor.hs`, `Server/Launcher.hs`, `Server/Main.hs`, `AI.hs` | Giám sát luồng (`withAsync`, `waitCatch`, `finally`), máy chủ nhúng, Bot AI tìm đường BFS đệ quy |
 | Trần Bảo Huy | `Client/Main.hs`, `Client/UI.hs`, `Client/Input.hs`, `Client/Account.hs`, `Client/Audio.hs`, `test/Spec.hs` | Giao diện Gloss 60 FPS, luồng dò tìm LAN tự điền IP & mã phòng, chuẩn hóa phím tiếng Việt (FFI), tệp tài khoản, âm thanh, 130 kịch bản kiểm thử |
 
@@ -166,7 +166,7 @@ Rubric 100 điểm và bonus GUI 5 điểm theo `Guidance/YÊU CẦU PROJECT.pdf
 | 5. Monad, IO và xử lý lỗi | 8 | `Either String` khi giải mã gói tin và đăng nhập, `Maybe`, `catch` / `finally` ở mạng |
 | 6. Parser combinator | 8 | `ParserCombinator.hs`; lệnh TCP, lệnh chat, gói UDP, tệp tài khoản |
 | 7. Song song và đồng bộ hóa | 15 | `TVar` + `TChan` + `atomically`, luồng tick / UDP / từng client, `MVar`, `par` / `pseq`, `-N` |
-| 8. Module, lưu trữ, kết nối tiến trình / mạng | 8 | 16 module phân tầng, tệp tài khoản, TCP 9123, UDP 9124, máy chủ nhúng |
+| 8. Module, lưu trữ, kết nối tiến trình / mạng | 8 | 17 module phân tầng, tệp tài khoản, TCP 9123, UDP 9124, máy chủ nhúng |
 | 9. Tính đúng và kiểm thử | 10 | `cabal test` 130 / 130 (14 nhóm), phép đo lazy / strict và song song |
 | 10. Báo cáo và trình diễn | 5 | `Báo cáo.docx` (bài báo khoa học 2 cột IMRAD), `prompt_canvas.md` |
 | 11. Đóng góp cá nhân và phản tư | 4 | Mục 9 ở trên và Mục V của `Báo cáo.docx` |
